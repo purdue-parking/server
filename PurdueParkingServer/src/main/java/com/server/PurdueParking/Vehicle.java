@@ -2,17 +2,17 @@ package com.server.PurdueParking;
 
 public class Vehicle {
 	public String owner;
-	public int carID;
+	public String carID;
 	public String plateNum;
 	public String plateState;
 	public String make;
 	public String model;
-	public int year;
+	public String year;
 	public String color;
 	
 	public Vehicle(){}
 
-	public Vehicle(String owner, int carID, String plateNum, String plateState, String make, String model, int year, String color){
+	public Vehicle(String owner, String carID, String plateNum, String plateState, String make, String model, String year, String color){
 		this.owner = owner;
 		this.carID = carID;
 		this.plateNum = plateNum;
@@ -31,11 +31,11 @@ public class Vehicle {
 		this.owner = owner;
 	}
 
-	public int getCarID() {
+	public String getCarID() {
 		return carID;
 	}
 
-	public void setCarID(int carID) {
+	public void setCarID(String carID) {
 		this.carID = carID;
 	}
 
@@ -71,11 +71,11 @@ public class Vehicle {
 		this.model = model;
 	}
 
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 

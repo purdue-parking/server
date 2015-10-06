@@ -1,7 +1,7 @@
 package com.server.PurdueParking;
 
 public class Ticket {
-	public int ticketNum;
+	public String ticketNum;
 	public String plateNum;
 	public String plateState;
 	public String time;
@@ -11,7 +11,7 @@ public class Ticket {
 	
 	public Ticket(){}
 	
-	public Ticket(int ticketNum, String plateNum, String plateState, String time, String date, String reason, String towAddress){
+	public Ticket(String ticketNum, String plateNum, String plateState, String time, String date, String reason, String towAddress){
 		this.ticketNum = ticketNum;
 		this.plateNum = plateNum;
 		this.plateState = plateState;
@@ -21,11 +21,11 @@ public class Ticket {
 		this.towAddress = towAddress;
 	}
 	
-	public int getTicketNum() {
+	public String getTicketNum() {
 		return ticketNum;
 	}
 
-	public void setTicketNum(int ticketNum) {
+	public void setTicketNum(String ticketNum) {
 		this.ticketNum = ticketNum;
 	}
 

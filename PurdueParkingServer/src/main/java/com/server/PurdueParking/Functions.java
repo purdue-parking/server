@@ -2,15 +2,18 @@ package com.server.PurdueParking;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.users.User;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Key;
-
 import java.util.ArrayList;
-
 import javax.inject.Named;
 
 @Api(
@@ -24,66 +27,119 @@ public class Functions {
 	static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	
 	@ApiMethod(name = "ticket.add", httpMethod = "post")
-	public Key createTicket(Ticket t){
+	public Entity createTicket(Ticket t){
 		Entity ticket = new Entity("Ticket", t.getTicketNum());
-		ticket.setProperty("Ticket Number", t.getTicketNum());
-		ticket.setProperty("License Plate Number", t.getPlateNum());
-		ticket.setProperty("License Plate State", t.getPlateState());
-		ticket.setProperty("Time", t.getTime());
-		ticket.setProperty("Date", t.getDate());
-		ticket.setProperty("Reason", t.getReason());
-		ticket.setProperty("Tow Company Address", t.getTowAddress());
-		return datastore.put(ticket);
+		ticket.setProperty("ticketNumber", t.getTicketNum());
+		ticket.setProperty("licensePlateNumber", t.getPlateNum());
+		ticket.setProperty("licensePlateState", t.getPlateState());
+		ticket.setProperty("time", t.getTime());
+		ticket.setProperty("date", t.getDate());
+		ticket.setProperty("reason", t.getReason());
+		ticket.setProperty("towCompanyAddress", t.getTowAddress());
+		datastore.put(ticket);
+		return ticket;
 	}
-/*	
-	public void getTickets(){
+	
+	@ApiMethod(name = "ticket.get", httpMethod = "get")
+	public ArrayList<Ticket> getTickets(@Named("username") String username){
+		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+		ArrayList<Entity> vehicles = getVehicles(username);
 
+		for(Entity v : vehicles){
+			Filter plateNum = new FilterPredicate("licensePlateNumber", FilterOperator.EQUAL, v.getProperty("licensePlateNumber"));
+			Filter plateState = new FilterPredicate("licensePlateState", FilterOperator.EQUAL, v.getProperty("licensePlateState"));
+			Filter plateFilter = CompositeFilterOperator.and(plateNum, plateState);
+			Query ticketsForOwner = new Query("Ticket").setFilter(plateFilter);
+			PreparedQuery ticketQuery = datastore.prepare(ticketsForOwner);
+			for(Entity e : ticketQuery.asIterable()){
+				Ticket t = new Ticket();
+				t.setTicketNum((String) e.getProperty("ticketNumber"));
+				t.setPlateNum((String) e.getProperty("licensePlateNumber"));
+				t.setPlateState((String) e.getProperty("licensePlateState"));
+				t.setTime((String) e.getProperty("time"));
+				t.setDate((String) e.getProperty("date"));
+				t.setReason((String) e.getProperty("reason"));
+				t.setTowAddress((String) e.getProperty("towCompanyAddress"));
+				tickets.add(t);
+			}
+		}		
+		return tickets;
+	}
+	
+	@ApiMethod(name = "ticket.delete")
+	public void deleteTicket(@Named("ticketNumber") String ticketNumber){
+		Key ticketKey = KeyFactory.stringToKey(ticketNumber);
+		datastore.delete(ticketKey);
 	}
 
-	public void getVehicles(){
-
+	@ApiMethod(name = "vehicle.get", httpMethod = "get")
+	public ArrayList<Entity> getVehicles(@Named("username") String username){
+		Filter owner = new FilterPredicate("owner",
+                FilterOperator.EQUAL,
+                username);
+		
+		Query q = new Query("Vehicle").setFilter(owner);
+		PreparedQuery pq = datastore.prepare(q);
+		ArrayList<Entity> vehicles = new ArrayList<Entity>();
+		for(Entity v : pq.asIterable()){
+			vehicles.add(v);
+		}
+		return vehicles;
 	}
-*/	
+	
 	@ApiMethod(name = "vehicle.add", httpMethod = "post")
-	public Key addVehicle(Vehicle v){
+	public Entity addVehicle(Vehicle v){
 		Entity vehicle = new Entity("Vehicle", v.getCarID());
-		vehicle.setProperty("Car ID", v.getCarID());
-		vehicle.setProperty("Owner", v.getOwner());
-		vehicle.setProperty("License Plate Number", v.getPlateNum());
-		vehicle.setProperty("License Plate State", v.getPlateState());
-		vehicle.setProperty("Make", v.getMake());
-		vehicle.setProperty("Model", v.getModel());
-		vehicle.setProperty("Year", v.getYear());
-		vehicle.setProperty("Color", v.getColor());
-		return datastore.put(vehicle);
-	}
-/*
-	public void deleteVehicle(){
-
+		vehicle.setProperty("carID", v.getCarID());
+		vehicle.setProperty("owner", v.getOwner());
+		vehicle.setProperty("licensePlateNumber", v.getPlateNum());
+		vehicle.setProperty("licensePlateState", v.getPlateState());
+		vehicle.setProperty("make", v.getMake());
+		vehicle.setProperty("model", v.getModel());
+		vehicle.setProperty("year", v.getYear());
+		vehicle.setProperty("color", v.getColor());
+		datastore.put(vehicle);
+		return vehicle;
 	}
 
-	//@ApiMethod(name = "vehicle.edi", httpMethod = "post")
-	public void editVehicle(){
-
+	@ApiMethod(name = "vehicle.delete")
+	public void deleteVehicle(@Named("carID") String carID){
+		Key vehicleKey = KeyFactory.stringToKey(carID);
+		datastore.delete(vehicleKey);
 	}
-*/
+
+	@ApiMethod(name = "vehicle.edit", httpMethod = "post")
+	public void editVehicle(Vehicle v){
+		deleteVehicle(v.getCarID());
+		addVehicle(v);
+	}
+
 	@ApiMethod(name = "account.add", httpMethod = "post")
-	public Key addAccount(Account a){
+	public Entity addAccount(Account a){
 		Entity account = new Entity("Account", a.getUsername());
-		account.setProperty("Username", a.getUsername());
-		account.setProperty("Name", a.getName());
-		account.setProperty("Email", a.getEmail());
-		account.setProperty("Phone Number", a.getPhoneNumber());
-		account.setProperty("Account Type", a.getAcctType());
-		return datastore.put(account);
-	}
-/*
-	public void deleteAccount(){
-
+		account.setProperty("username", a.getUsername());
+		account.setProperty("name", a.getName());
+		account.setProperty("email", a.getEmail());
+		account.setProperty("phoneNumber", a.getPhoneNumber());
+		account.setProperty("accountType", a.getAcctType());
+		datastore.put(account);
+		return account;
 	}
 
-	//@ApiMethod(name = "account.edit", httpMethod = "post")
-	public void editAccount(){
+	@ApiMethod(name = "account.delete")
+	public void deleteAccount(@Named("username") String username){
+		ArrayList<Entity> vehicles = getVehicles(username);
+		for(Entity v : vehicles){
+			deleteVehicle((String) v.getProperty("carID"));
+		}
+		Key userKey = KeyFactory.stringToKey(username);
+		datastore.delete(userKey);
+	}
 
-	}*/
+	@ApiMethod(name = "account.edit", httpMethod = "post")
+	public void editAccount(Account a){
+		Key userKey = KeyFactory.stringToKey(a.getUsername());
+		datastore.delete(userKey);
+		addAccount(a);
+	}
 }
