@@ -4,15 +4,15 @@
 		String username; - Used as the unique identifier for all accounts
 		String name;
 		String email;
-		String phoneNumber;
+		String phoneNumber; - Formatted 'XXX-XXX-XXXX'
 		String acctType; - Three types are 'CITIZEN', 'POLICE', or 'TOW'
 	
 	
 	Ticket
 		String ticketNum;  - Used as the unique identifier for all tickets
 		String plateNum;
-		String plateState;
-		String time; - Formatted military time style 'hh:mm'
+		String plateState; - Use state abreviations such as NY or IN
+		String time; - Formatted time style 'hh:mm'
 		String date; - Formatted 'mm/dd/yyyy'
 		String reason;
 		String towAddress; - Use 'N/A' if the car is not being towed
@@ -31,37 +31,40 @@
 
 	Tickets:
 	
-      	   createTicket(Ticket t) - Adds a new ticket to the datastore
+      	   Entity createTicket(Ticket t) - Adds a new ticket to the datastore (See the ticket class for names of fields)
+      	                                 - Must be called by a "TOW" or "POLICE" account type
       	   	Call Path: Gapi.client.purdueParking.ticket.add
       	   	
-      	   getTickets(String username) - Get the tickets for the current user based off username
+      	   ArrayList<Ticket> getTickets(String username) - Get the tickets for the current user based off username
       	   	Call Path: Gapi.client.purdueParking.ticket.get
       	   	
-      	   deleteTicket(String ticketNumber) - Deletes the given ticket
+      	   void deleteTicket(String ticketNumber) - Deletes the given ticket
       	   	Call Path: Gapi.client.purdueParking.ticket.delete
       
         Vehicles:
          
-         	addVehicle(Vehicle v) - Adds a new vehicle to the datastore
+         	Entity addVehicle(Vehicle v) - Adds a new vehicle to the datastore (See the Vehicle class for field names)
+         	                             - Must be called by "CITIZEN" account type
          		Call Path: Gapi.client.purdueParking.vehicle.add
          		
-         	getVehicles(String username) - Gets a list of the vehicles for the given username
+         	ArrayList<Vehicle> getVehicles(String username) - Gets a list of the vehicles for the given username
          		Call Path: Gapi.client.purdueParking.vehicle.get
          		
-         	deleteVehicle(String carID) - Deletes the vehicle with the given ID
+         	void deleteVehicle(String carID) - Deletes the vehicle with the given ID
          		Call Path: Gapi.client.purdueParking.vehicle.delete
          		
-         	editVehicle(Vehicle v) - Edits the information attached to the vehicle *Vehicle must already exist*
+         	void editVehicle(Vehicle v) - Edits the information attached to the vehicle *Vehicle must already exist*
          		Call Path: Gapi.client.purdueParking.vehicle.edit
          		
         Accounts:
          
-         	addAccount(Account a) - Adds a new account to the datastore
+         	Entity addAccount(Account a) - Adds a new account to the datastore (See account class for field names)
+         	                             - Must be called by "CITIZEN" account type
          		Call Path: Gapi.client.purdueParking.account.add
          	
-         	deleteAccount(String username) - Deletes the account with the given username and all vehicles associated
+         	void deleteAccount(String username) - Deletes the account with the given username and all vehicles associated
          		Call Path: Gapi.client.purdueParking.account.delete
          	
-         	editAccount(Account a) - Edits the information attached to the account *Account must already exist*
+         	void editAccount(Account a) - Edits the information attached to the account *Account must already exist*
          		Call Path: Gapi.client.purdueParking.account.edit
   	
