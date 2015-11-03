@@ -97,4 +97,11 @@
         	
         	void deleteMessage(long messageID) - Deletes the messages and all associated comments
         		DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/message/MESSAGEID
+        		
+        Comments:
+        	Entity addComment(Comment c) - Adds a new comment to the datastore (See the comment class for field names)
+        		POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/addComment
+        	
+        	ArrayList<Comment> getComments(long messageID) - Gets all comments for a given message
+        		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/commentcollection/MESSAGEID
   	
