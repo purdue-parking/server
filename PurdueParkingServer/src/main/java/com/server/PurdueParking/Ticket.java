@@ -1,8 +1,8 @@
 package com.server.PurdueParking;
 
 public class Ticket {
-	public String ticketNum;
-	public String plateNum;
+	public String ticketNumber;
+	public String plateNumber;
 	public String plateState;
 	public String time;
 	public String date;
@@ -11,9 +11,9 @@ public class Ticket {
 	
 	public Ticket(){}
 	
-	public Ticket(String ticketNum, String plateNum, String plateState, String time, String date, String reason, String towAddress){
-		this.ticketNum = ticketNum;
-		this.plateNum = plateNum;
+	public Ticket(String ticketNumber, String plateNumber, String plateState, String time, String date, String reason, String towAddress){
+		this.ticketNumber = ticketNumber;
+		this.plateNumber = plateNumber;
 		this.plateState = plateState;
 		this.time = time;
 		this.date = date;
@@ -22,19 +22,19 @@ public class Ticket {
 	}
 	
 	public String getTicketNum() {
-		return ticketNum;
+		return ticketNumber;
 	}
 
-	public void setTicketNum(String ticketNum) {
-		this.ticketNum = ticketNum;
+	public void setTicketNum(String ticketNumber) {
+		this.ticketNumber = ticketNumber;
 	}
 
-	public String getPlateNum() {
-		return plateNum;
+	public String getPlateNumber() {
+		return plateNumber;
 	}
 
-	public void setPlateNum(String plateNum) {
-		this.plateNum = plateNum;
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
 	}
 
 	public String getPlateState() {

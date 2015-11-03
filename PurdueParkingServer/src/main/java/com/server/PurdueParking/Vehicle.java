@@ -1,9 +1,9 @@
 package com.server.PurdueParking;
 
 public class Vehicle {
-	public String owner;
-	public String carID;
-	public String plateNum;
+	public String username;
+	public long carID;
+	public String plateNumber;
 	public String plateState;
 	public String make;
 	public String model;
@@ -12,10 +12,9 @@ public class Vehicle {
 	
 	public Vehicle(){}
 
-	public Vehicle(String owner, String carID, String plateNum, String plateState, String make, String model, String year, String color){
-		this.owner = owner;
-		this.carID = carID;
-		this.plateNum = plateNum;
+	public Vehicle(String username, String plateNumber, String plateState, String make, String model, String year, String color){
+		this.username = username;
+		this.plateNumber = plateNumber;
 		this.plateState = plateState;
 		this.make = make;
 		this.model = model;
@@ -23,28 +22,28 @@ public class Vehicle {
 		this.color = color;
 	}
 	
-	public String getOwner() {
-		return owner;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public String getCarID() {
+	public long getCarID() {
 		return carID;
 	}
 
-	public void setCarID(String carID) {
+	public void setCarID(long carID) {
 		this.carID = carID;
 	}
 
-	public String getPlateNum() {
-		return plateNum;
+	public String getPlateNumber() {
+		return plateNumber;
 	}
 
-	public void setPlateNum(String plateNum) {
-		this.plateNum = plateNum;
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
 	}
 
 	public String getPlateState() {

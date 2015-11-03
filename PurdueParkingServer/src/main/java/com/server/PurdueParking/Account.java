@@ -2,6 +2,7 @@ package com.server.PurdueParking;
 
 public class Account {
 	public String username;
+	public String password;
 	public String name;
 	public String email;
 	public String phoneNumber;
@@ -9,8 +10,9 @@ public class Account {
 	
 	public Account(){}
 	
-	public Account(String username, String name, String email, String phoneNumber, String acctType){
+	public Account(String username, String password, String name, String email, String phoneNumber, String acctType){
 		this.username = username;
+		this.password = password;
 		this.name = name;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
@@ -56,5 +58,14 @@ public class Account {
 	public void setAcctType(String acctType) {
 		this.acctType = acctType;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 }
 
