@@ -21,11 +21,11 @@ public class Ticket {
 		this.towAddress = towAddress;
 	}
 	
-	public String getTicketNum() {
+	public String getTicketNumber() {
 		return ticketNumber;
 	}
 
-	public void setTicketNum(String ticketNumber) {
+	public void setTicketNumber(String ticketNumber) {
 		this.ticketNumber = ticketNumber;
 	}
 

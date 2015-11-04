@@ -2,14 +2,14 @@ package com.server.PurdueParking;
 
 public class Comment {
 	public String username;
-	public String message;
+	public String comment;
 	public long parent;
 	
 	public Comment(){}
 
-	public Comment(String username, String message, long parent) {
+	public Comment(String username, String comment, long parent) {
 		this.username = username;
-		this.message = message;
+		this.comment = comment;
 		this.parent = parent;
 	}
 
@@ -21,12 +21,12 @@ public class Comment {
 		this.username = username;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public long getParent() {

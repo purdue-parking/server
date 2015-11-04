@@ -32,8 +32,8 @@ public class Functions {
 	
 	@ApiMethod(name = "ticket.add", httpMethod = "post")
 	public Entity addTicket(Ticket t){
-			Entity ticket = new Entity("Ticket", t.getTicketNum());
-			ticket.setProperty("ticketNumber", t.getTicketNum());
+			Entity ticket = new Entity("Ticket", t.getTicketNumber());
+			ticket.setProperty("ticketNumber", t.getTicketNumber());
 			ticket.setProperty("plateNumber", t.getPlateNumber());
 			ticket.setProperty("plateState", t.getPlateState());
 			ticket.setProperty("time", t.getTime());
@@ -44,7 +44,26 @@ public class Functions {
 			return ticket;
 	}
 	
-	@ApiMethod(name = "ticket.get", httpMethod = "get")
+	@ApiMethod(name = "ticket.getAll", httpMethod = "get")
+	public ArrayList<Ticket> getAllTickets(){
+		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+		Query ticks = new Query("Ticket");
+		PreparedQuery ticketQuery = datastore.prepare(ticks);
+		for(Entity e : ticketQuery.asIterable()){
+			Ticket t = new Ticket();
+			t.setTicketNumber((String) e.getProperty("ticketNumber"));
+			t.setPlateNumber((String) e.getProperty("plateNumber"));
+			t.setPlateState((String) e.getProperty("plateState"));
+			t.setTime((String) e.getProperty("time"));
+			t.setDate((String) e.getProperty("date"));
+			t.setReason((String) e.getProperty("reason"));
+			t.setTowAddress((String) e.getProperty("towAddress"));
+			tickets.add(t);
+		}
+		return tickets;
+	}
+	
+	@ApiMethod(name = "ticket.getUser", httpMethod = "get")
 	public ArrayList<Ticket> getTickets(@Named("username") String username){
 		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 		ArrayList<Entity> vehicles = getVehiclesEntity(username);
@@ -57,7 +76,7 @@ public class Functions {
 			PreparedQuery ticketQuery = datastore.prepare(ticketsForOwner);
 			for(Entity e : ticketQuery.asIterable()){
 				Ticket t = new Ticket();
-				t.setTicketNum((String) e.getProperty("ticketNumber"));
+				t.setTicketNumber((String) e.getProperty("ticketNumber"));
 				t.setPlateNumber((String) e.getProperty("plateNumber"));
 				t.setPlateState((String) e.getProperty("plateState"));
 				t.setTime((String) e.getProperty("time"));
@@ -68,6 +87,12 @@ public class Functions {
 			}
 		}		
 		return tickets;
+	}
+	
+	@ApiMethod(name = "ticket.edit", httpMethod = "post")
+	public void editTicket(Ticket t){
+		deleteTicket(t.getTicketNumber());
+		addTicket(t);
 	}
 	
 	@ApiMethod(name = "ticket.delete", httpMethod = "delete")
@@ -248,29 +273,8 @@ public class Functions {
 		deleteComments(messageID);
 	}
 	
-	/*@ApiMethod(name = "message.getMine", httpMethod = "get")
-	public ArrayList<Message> getMyMessages(@Named("username") String username){	
-		ArrayList<Message> messages = new ArrayList<Message>();
-		Filter owner = new FilterPredicate("owner",
-                FilterOperator.EQUAL,
-                username);
-		
-		Query q = new Query("Message").setFilter(owner);
-		PreparedQuery pq = datastore.prepare(q);
-		for(Entity e : pq.asIterable()){
-			Message m = new Message();
-			m.setUsername((String) e.getProperty("username"));
-			m.setMessage((String) e.getProperty("message")); 
-			m.setVotes(Integer.parseInt((String) e.getProperty("votes")));
-			m.setHelpNeeded((boolean) e.getProperty("helpNeeded"));
-			m.setResolved((boolean) e.getProperty("resolved"));
-			messages.add(m);
-		}
-		return messages;
-	}*/
-	
 	@ApiMethod(name = "message.getPage", httpMethod = "get")
-	public ArrayList<Message> getMessagePage(@Named("page") int page){	
+	public ArrayList<Message> getMessagePage(@Named("page") long page){	
 		ArrayList<Message> messages = new ArrayList<Message>();		
 		Query q = new Query("Message").addSort("messageID", SortDirection.DESCENDING);
 		PreparedQuery pq = datastore.prepare(q);
@@ -291,9 +295,120 @@ public class Functions {
 		}
 		return messages;
 	}
-	/*
+	
+	@ApiMethod(name = "message.getVotePage", httpMethod = "put")
+	public ArrayList<Message> getMessageVotePage(@Named("page") long page, @Named("descending") boolean descending){	
+		ArrayList<Message> messages = new ArrayList<Message>();
+		Query q;
+		if(descending){
+			q = new Query("Message").addSort("votes", SortDirection.DESCENDING);
+		} else {
+			q = new Query("Message").addSort("votes", SortDirection.ASCENDING);
+		}
+		PreparedQuery pq = datastore.prepare(q);
+		int count = 1;
+		for(Entity e : pq.asIterable()){
+			if(count > ((page-1) * 20) && count <= (page * 20)){
+				Message m = new Message();
+				m.setMessageID((long) e.getProperty("messageID"));
+				m.setUsername((String) e.getProperty("username"));
+				m.setMessage((String) e.getProperty("message")); 
+				m.setVotes((long) e.getProperty("votes"));
+				m.setHelpNeeded((boolean) e.getProperty("helpNeeded"));
+				m.setResolved((boolean) e.getProperty("resolved"));
+				m.setTimePosted((Date) e.getProperty("timePosted"));
+				messages.add(m);
+			}
+			count++;
+		}
+		return messages;
+	}
+	
+	@ApiMethod(name = "message.getMine", httpMethod = "get")
+	public ArrayList<Message> getMyMessages(@Named("page") long page, @Named("username") String username){	
+		ArrayList<Message> messages = new ArrayList<Message>();
+		Filter owner = new FilterPredicate("username",
+                FilterOperator.EQUAL,
+                username);
+		
+		Query q = new Query("Message").setFilter(owner).addSort("messageID", SortDirection.DESCENDING);
+		PreparedQuery pq = datastore.prepare(q);
+		int count = 1;
+		for(Entity e : pq.asIterable()){
+			if(count > ((page-1) * 20) && count <= (page * 20)){
+				Message m = new Message();
+				m.setMessageID((long) e.getProperty("messageID"));
+				m.setUsername((String) e.getProperty("username"));
+				m.setMessage((String) e.getProperty("message")); 
+				m.setVotes((long) e.getProperty("votes"));
+				m.setHelpNeeded((boolean) e.getProperty("helpNeeded"));
+				m.setResolved((boolean) e.getProperty("resolved"));
+				m.setTimePosted((Date) e.getProperty("timePosted"));
+				messages.add(m);
+			}
+			count++;
+		}
+		return messages;
+	}
+	
+	@ApiMethod(name = "message.getHelpNeeded", httpMethod = "post")
+	public ArrayList<Message> getHelpNeeded(@Named("page") long page){	
+		ArrayList<Message> messages = new ArrayList<Message>();	
+		Filter help = new FilterPredicate("helpNeeded",
+                FilterOperator.EQUAL,
+                true);
+		Query q = new Query("Message").setFilter(help).addSort("messageID", SortDirection.DESCENDING);
+		PreparedQuery pq = datastore.prepare(q);
+		int count = 1;
+		for(Entity e : pq.asIterable()){
+			if(count > ((page-1) * 20) && count <= (page * 20)){
+				Message m = new Message();
+				m.setMessageID((long) e.getProperty("messageID"));
+				m.setUsername((String) e.getProperty("username"));
+				m.setMessage((String) e.getProperty("message")); 
+				m.setVotes((long) e.getProperty("votes"));
+				m.setHelpNeeded((boolean) e.getProperty("helpNeeded"));
+				m.setResolved((boolean) e.getProperty("resolved"));
+				m.setTimePosted((Date) e.getProperty("timePosted"));
+				messages.add(m);
+			}
+			count++;
+		}
+		return messages;
+	}
+	
+	@ApiMethod(name = "message.getResolved", httpMethod = "post")
+	public ArrayList<Message> getResolved(@Named("page") long page, @Named("resolved") boolean resolved){	
+		ArrayList<Message> messages = new ArrayList<Message>();	
+		Filter help = new FilterPredicate("helpNeeded",
+                FilterOperator.EQUAL,
+                true);
+		Filter res = new FilterPredicate("resolved",
+                FilterOperator.EQUAL,
+                resolved);
+		Filter resolvedFilter = CompositeFilterOperator.and(help, res);
+		Query q = new Query("Message").setFilter(resolvedFilter).addSort("messageID", SortDirection.DESCENDING);
+		PreparedQuery pq = datastore.prepare(q);
+		int count = 1;
+		for(Entity e : pq.asIterable()){
+			if(count > ((page-1) * 20) && count <= (page * 20)){
+				Message m = new Message();
+				m.setMessageID((long) e.getProperty("messageID"));
+				m.setUsername((String) e.getProperty("username"));
+				m.setMessage((String) e.getProperty("message")); 
+				m.setVotes((long) e.getProperty("votes"));
+				m.setHelpNeeded((boolean) e.getProperty("helpNeeded"));
+				m.setResolved((boolean) e.getProperty("resolved"));
+				m.setTimePosted((Date) e.getProperty("timePosted"));
+				messages.add(m);
+			}
+			count++;
+		}
+		return messages;
+	}
+		
 	@ApiMethod(name = "message.upvote", httpMethod = "post")
-	public Entity Upvote(@Named("messageID") long messageID){
+	public Entity upvote(@Named("messageID") long messageID){
 		Filter id = new FilterPredicate("messageID",
                 FilterOperator.EQUAL,
                 messageID);
@@ -309,7 +424,7 @@ public class Functions {
 	}
 	
 	@ApiMethod(name = "message.downvote", httpMethod = "post")
-	public Entity Downvote(@Named("messageID") long messageID){
+	public Entity downvote(@Named("messageID") long messageID){
 		Filter id = new FilterPredicate("messageID",
                 FilterOperator.EQUAL,
                 messageID);
@@ -328,12 +443,12 @@ public class Functions {
 			return e;
 		}
 	}
-	*/
+
 	@ApiMethod(name = "comment.add", httpMethod = "post")
 	public Entity addComment(Comment c){
 		Entity comment = new Entity("Comment");
 		comment.setProperty("username", c.getUsername());
-		comment.setProperty("message", c.getMessage());
+		comment.setProperty("comment", c.getComment());
 		comment.setProperty("parent", c.getParent());
 		datastore.put(comment);
 		return comment;
@@ -349,7 +464,7 @@ public class Functions {
 		PreparedQuery pq = datastore.prepare(q);
 		for(Entity e : pq.asIterable()){
 			Comment c = new Comment();
-			c.setMessage((String) e.getProperty("message"));
+			c.setComment((String) e.getProperty("comment"));
 			c.setParent((long) e.getProperty("parent")); 
 			c.setUsername((String) e.getProperty("username")); 
 			comments.add(c);
