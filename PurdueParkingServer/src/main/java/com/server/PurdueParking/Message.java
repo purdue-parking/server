@@ -19,7 +19,7 @@ public class Message {
 		votes = 0;
 		this.helpNeeded = helpNeeded;
 		this.resolved = resolved;
-		timePosted = new Date();
+		//timePosted = new Date();
 	}
 	
 	public long getMessageID(){

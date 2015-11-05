@@ -200,7 +200,7 @@ public class Functions {
 		account.setProperty("name", a.getName());
 		account.setProperty("email", a.getEmail());
 		account.setProperty("phoneNumber", a.getPhoneNumber());
-		account.setProperty("accountType", a.getAcctType());
+		account.setProperty("accountType", a.getAccounttType());
 		datastore.put(account);
 		return account;
 	}
@@ -251,6 +251,7 @@ public class Functions {
 			break;
 		}
 		Entity message = new Entity("Message", count+1);
+		m.setTimePosted(new Date());
 		message.setProperty("messageID", count+1);
 		message.setProperty("username", m.getUsername());
 		message.setProperty("message", m.getMessage());
