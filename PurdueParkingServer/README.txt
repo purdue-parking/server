@@ -6,6 +6,9 @@
 		String email;
 		String phoneNumber; - Formatted 'XXX-XXX-XXXX'
 		String acctType; - Three types are 'CITIZEN', 'POLICE', or 'TOW'
+		boolean ticketEmail; - account setting to receive emails for new tickets
+		boolean helpEmail; - account setting to receive emails for new help neededs
+		boolean responseEmail; - account setting to receive emails for responses to your messages
 	
 	
 	Ticket
@@ -41,6 +44,7 @@
 		long votes; - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, auto set to 0 at start
 		boolean resolved;-set to true if helpNeeded is false
 		Date timePosted - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, automatically set
+		boolean special; - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, automatically set
 	
 	Comment
 		String username; - Username of the person that posts the comment
@@ -50,12 +54,13 @@
 ## API Functions and Call Paths
 
 Tickets:
-	Entity addTicket(Ticket t) - Adds a new ticket to the datastore (See the ticket class for names of fields)
+	Entity addTicket(Ticket t, String username) - Adds a new ticket to the datastore (See the ticket class for names of fields)
      	   POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/addTicket
       	   	
       	ArrayList<Ticket> getTickets(String username) - Get the tickets for the current user based off username
       	   GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/ticketcollection/USERNAME
       	   	
+      	/* CURRENTLY NOT AVAILABLE */
       	ArrayList<Ticket> getAllTickets() - Returns all tickets in the datastore
       	   GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/ticketcollection
       	   	
@@ -76,7 +81,7 @@ Vehicles:
        	void deleteVehicle(long carID) - Deletes the vehicle with the given ID
        		DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/vehicle/CARID
          		
-       	void editVehicle(Vehicle v) - Edits the information attached to the vehicle *VehicleID Must Be Given*
+       	void editVehicle(Vehicle v, String username) - Edits the information attached to the vehicle *VehicleID Must Be Given*
        		POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/editVehicle
          		
 Accounts:
