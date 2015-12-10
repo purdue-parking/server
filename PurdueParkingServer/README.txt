@@ -18,7 +18,7 @@
 		String time; - Formatted time style 'hh:mm'
 		String date; - Formatted 'mm/dd/yyyy'
 		String reason;
-		String towAddress; - Use 'N/A' if the car is not being towed
+		String towAddress; - Use null if the car is not being towed
 	
 	Vehicle
 		String username; - Should be the username of the vehicle's owner
@@ -31,10 +31,13 @@
 		String color;
 	
 	LotInfo
-		long[2] coordinate1; - coordinate[0] = x : coordinate[1] = y
-		long[2] coordinate2;
+		long x1;
+		long y1;
+		long x2;
+		long y2;
 		String parkingPasses; - Formatted as a comma separated list of valid parking passes, ex. "A,B"
 		String timeRestrictions; - Formatted as "XX:XX(a/p).m.-XX:XX(a/p).m."
+		String color; - If there is no color, should be set to "none"
 	
 	Message
 		long messageID; - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, auto generated
@@ -42,7 +45,6 @@
 		String message;
 		boolean helpNeeded;
 		long votes; - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, auto set to 0 at start
-		boolean resolved;-set to true if helpNeeded is false
 		Date timePosted - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, automatically set
 		boolean special; - *NOT PASSED AS AN ARGUMENT WHEN ADDING A NEW MESSAGE*, automatically set
 	
@@ -55,14 +57,14 @@
 
 Tickets:
 	Entity addTicket(Ticket t, String username) - Adds a new ticket to the datastore (See the ticket class for names of fields)
-     	   POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/addTicket
+     	   POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/addTicket/USERNAME
       	   	
       	ArrayList<Ticket> getTickets(String username) - Get the tickets for the current user based off username
       	   GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/ticketcollection/USERNAME
       	   	
-      	/* CURRENTLY NOT AVAILABLE */
-      	ArrayList<Ticket> getAllTickets() - Returns all tickets in the datastore
-      	   GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/ticketcollection
+      	
+      	ArrayList<Ticket> getAllTickets(String Username) - Returns all tickets in the datastore
+      	   POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/ticketcollection/USERNAME
       	   	
       	void deleteTicket(String ticketNumber) - Deletes the given ticket
       	   DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/ticket/TICKETNUMBER
@@ -114,10 +116,6 @@ Messages:
         		
        	ArrayList<Message> getHelpNeeded(long page) - Gets the given page of helpNeeded messages
        		POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/messagecollection/PAGE
-        		
-       	ArrayList<Message> getResolved(long page, boolean resolved) - Gets the given page of helpNeeded messages
-       								    - Returns either resolved or not resolved help neededs  
-       		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/messagecollection/PAGE/RESOLVED
        		
         Entity upvote(long messageID) - Adds one to the vote count of the given messageID
         	POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/upvote/MESSAGEID
@@ -135,3 +133,13 @@ Comments:
         	
        	ArrayList<Comment> getComments(long messageID) - Gets all comments for a given message
        		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/commentcollection/MESSAGEID
+       		
+LotInfo:
+	Entity addLotInfo(LotInfo l) - Adds a new lot info to the datastore (See the lotInfo class for field names)
+       		POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/addLotInfo
+       		
+       	ArrayList<LotInfo> getLotInfo() - Gets all lotInfo
+       		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/lotinfocollection
+       	
+       	void deleteLotInfo(long x1, long y1, long x2, long y2) - Deletes the specific LotInfo with the given coordinates	
+       		DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/lotinfo/X1/Y1/X2/Y2
