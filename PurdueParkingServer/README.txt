@@ -99,6 +99,9 @@ Accounts:
          	
        	Entity getAccount(String username) - Returns the account entity for the given username
        		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/entity/USERNAME
+       		
+       	Entity login(String username, String password) - Attempts to log in a user
+       		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/login/USERNAME/PASSWORD
          		
 Messages:
       	Entity addMessage(Message m) - Adds a new message to the datastore (See message class for field names)
@@ -126,6 +129,9 @@ Messages:
         	
        	void deleteMessage(long messageID) - Deletes the messages and all associated comments
        		DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/message/MESSAGEID
+       		
+       	void resolveMessage(long messageID) - Sets message's helpNeeded field to false
+       		POST Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/resolveMessage/MESSAGEID
        		
 Comments:
        	Entity addComment(Comment c) - Adds a new comment to the datastore (See the comment class for field names)
