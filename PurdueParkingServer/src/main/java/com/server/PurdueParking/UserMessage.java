@@ -2,24 +2,22 @@ package com.server.PurdueParking;
 
 import java.util.Date;
 
-public class Message {
+public class UserMessage {
 	public long messageID;
 	public String username;
 	public String message;
 	public long votes;
-	public boolean resolved;
 	public boolean helpNeeded;
 	public Date timePosted;
+	public boolean special;
 	
-	public Message(){}
+	public UserMessage(){}
 	
-	public Message(String username, String message, boolean helpNeeded, boolean resolved){
+	public UserMessage(String username, String message, boolean helpNeeded){
 		this.username = username;
 		this.message = message;
 		votes = 0;
 		this.helpNeeded = helpNeeded;
-		this.resolved = resolved;
-		//timePosted = new Date();
 	}
 	
 	public long getMessageID(){
@@ -62,19 +60,19 @@ public class Message {
 		this.votes = votes;
 	}
 
-	public boolean isResolved() {
-		return resolved;
-	}
-
-	public void setResolved(boolean resolved) {
-		this.resolved = resolved;
-	}
-
 	public boolean isHelpNeeded() {
 		return helpNeeded;
 	}
 
 	public void setHelpNeeded(boolean helpNeeded) {
 		this.helpNeeded = helpNeeded;
+	}
+
+	public boolean isSpecial() {
+		return special;
+	}
+
+	public void setSpecial(boolean special) {
+		this.special = special;
 	}
 }

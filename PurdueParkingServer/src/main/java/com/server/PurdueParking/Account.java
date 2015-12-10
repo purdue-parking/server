@@ -7,16 +7,23 @@ public class Account {
 	public String email;
 	public String phoneNumber;
 	public String accountType;
+	public boolean ticketEmail;
+	public boolean helpEmail;
+	public boolean responseEmail;
 	
 	public Account(){}
 	
-	public Account(String username, String password, String name, String email, String phoneNumber, String accountType){
+	public Account(String username, String password, String name, String email, String phoneNumber, String accountType,
+					boolean ticketEmail, boolean helpEmail, boolean responseEmail){
 		this.username = username;
 		this.password = password;
 		this.name = name;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.accountType = accountType;
+		this.ticketEmail = ticketEmail;
+		this.helpEmail = helpEmail;
+		this.responseEmail = responseEmail;
 	}
 	
 	public String getUsername() {
@@ -51,12 +58,12 @@ public class Account {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getAccounttType() {
+	public String getAccountType() {
 		return accountType;
 	}
 
-	public void setAccountType(String acctType) {
-		this.accountType = acctType;
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
 	}
 	
 	public String getPassword() {
@@ -67,5 +74,27 @@ public class Account {
 		this.password = password;
 	}
 
-}
+	public boolean isTicketEmail() {
+		return ticketEmail;
+	}
 
+	public void setTicketEmail(boolean ticketEmail) {
+		this.ticketEmail = ticketEmail;
+	}
+
+	public boolean isHelpEmail() {
+		return helpEmail;
+	}
+
+	public void setHelpEmail(boolean helpEmail) {
+		this.helpEmail = helpEmail;
+	}
+
+	public boolean isResponseEmail() {
+		return responseEmail;
+	}
+
+	public void setResponseEmail(boolean responseEmail) {
+		this.responseEmail = responseEmail;
+	}
+}
