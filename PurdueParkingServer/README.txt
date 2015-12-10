@@ -141,5 +141,5 @@ LotInfo:
        	ArrayList<LotInfo> getLotInfo() - Gets all lotInfo
        		GET Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/lotinfocollection
        	
-       	void deleteLotInfo(long x1, long y1, long x2, long y2) - Deletes the specific LotInfo with the given coordinates	
-       		DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/lotinfo/X1/Y1/X2/Y2
+       	void deleteColoredLotInfo() - Deletes all colored lotInfo	
+       		DELETE Call Path: https://purdue-parking.appspot.com/_ah/api/purdueParking/1/coloredlotinfo
